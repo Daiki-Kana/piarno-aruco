@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>PiARno2 - WebAR Paper Piano</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- メインカメラ演奏ビュー -->
+      <main id="camera-view" class="camera-view">
+        <!-- カメラ映像プレビュー -->
+        <video id="camera-video" class="camera-stream" playsinline autoplay muted></video>
+
+        <!-- 鍵盤・指先マーカー描画・操作用キャンバス -->
+        <canvas id="overlay-canvas" class="overlay-canvas"></canvas>
+
+        <!-- ナビゲーションバー (左: 印刷シート, 右: CALIBRATE) -->
+        <header class="top-nav">
+          <div class="nav-left">
+            <button id="open-print-btn" class="nav-btn" aria-label="A4印刷シートを開く" title="A4印刷シート">
+              <span class="btn-icon">🖨️</span>
+              <span class="btn-label">A4印刷シート</span>
+            </button>
+          </div>
+          <div class="nav-right">
+            <button id="calibrate-btn" class="nav-btn primary-action-btn" aria-label="キャリブレーション実行" title="CALIBRATE">
+              <span class="btn-icon">🎯</span>
+              <span class="btn-label">CALIBRATE</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- 音声アンロック用ガイドバナー -->
+        <div id="audio-guide-banner" class="audio-guide-banner">
+          <span>🔊 画面をタップして音声を有効化</span>
+        </div>
+
+        <!-- 状態表示トーストメッセージ (白黒ミニマル) -->
+        <div id="status-message" class="status-message hidden" role="status" aria-live="polite"></div>
+      </main>
+
+      <!-- 印刷プレビュー用フルスクリーンビュー -->
+      <aside id="print-view" class="print-view hidden" aria-modal="true" role="dialog" aria-label="A4キャリブレーション用紙印刷">
+        <!-- 印刷操作バー (画面表示時のみ、@media print で非表示) -->
+        <div class="print-toolbar no-print">
+          <div class="toolbar-left">
+            <button id="back-btn" class="toolbar-btn" aria-label="演奏画面へ戻る">
+              ← 戻る
+            </button>
+            <div class="print-notice">
+              <span class="notice-badge">重要</span>
+              <span>用紙: <strong>A4 横向き</strong> / 余白: <strong>なし</strong> / 倍率: <strong>100%（等倍）</strong> で印刷してください</span>
+            </div>
+          </div>
+          <div class="toolbar-right">
+            <button id="download-pdf-btn" class="toolbar-btn secondary-btn" aria-label="A4用紙のPDFファイルをダウンロード" title="A4実寸PDFをダウンロード">
+              📄 PDFダウンロード
+            </button>
+            <button id="print-btn" class="toolbar-btn primary-btn" aria-label="ブラウザの印刷ダイアログを開く">
+              🖨️ 印刷する
+            </button>
+          </div>
+        </div>
+
+        <!-- A4シートプレビューコンテナ -->
+        <div id="sheet-container" class="sheet-container">
+          <!-- A4用紙実寸比率シート (297mm x 210mm) -->
+          <div id="a4-sheet" class="a4-sheet">
+            <!-- 四隅のArUcoマーカースロット (ID 0〜3) -->
+            <!-- 鍵盤線は一切描画しない完全な白紙領域 -->
+            <div class="marker-slot marker-tl" data-marker-id="0"></div>
+            <div class="marker-slot marker-tr" data-marker-id="1"></div>
+            <div class="marker-slot marker-br" data-marker-id="2"></div>
+            <div class="marker-slot marker-bl" data-marker-id="3"></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

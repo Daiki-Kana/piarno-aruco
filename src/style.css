@@ -1,0 +1,493 @@
+@charset "UTF-8";
+
+/* -------------------------------------------------------------
+ * リセット & 基本スタイル (白黒ミニマル)
+ * ------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #ffffff;
+}
+
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+/* ユーティリティ */
+.hidden {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------
+ * 通常カメラ演奏ビュー
+ * ------------------------------------------------------------- */
+.camera-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.camera-stream {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.overlay-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  touch-action: none;
+}
+
+/* ナビゲーションバー (白黒ミニマル) */
+.top-nav {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.nav-left, .nav-right {
+  pointer-events: auto;
+}
+
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #444444;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.nav-btn:hover {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.nav-btn:active {
+  transform: scale(0.98);
+}
+
+/* CALIBRATEボタン強調スタイル (白黒ミニマル) */
+.primary-action-btn {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.primary-action-btn:hover {
+  background-color: #dddddd;
+  border-color: #dddddd;
+}
+
+.primary-action-btn.calibrated {
+  background-color: #000000;
+  color: #ffffff;
+  border-color: #666666;
+  font-weight: 500;
+}
+
+.primary-action-btn.calibrated:hover {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.btn-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* 状態通知トーストメッセージ (白黒ミニマル) */
+.status-message {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #ffffff;
+  border: 1px solid #555555;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 30;
+  pointer-events: none;
+  text-align: center;
+  max-width: 90%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.status-message.error {
+  border-color: #ffffff;
+  background-color: #1a1a1a;
+}
+
+.status-message.success {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------
+ * 印刷プレビュー画面 (SPA切り替え)
+ * ------------------------------------------------------------- */
+.print-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #121212;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 上部操作バー (白黒ミニマル) */
+.print-toolbar {
+  height: 56px;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+  z-index: 60;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #555555;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toolbar-btn:hover {
+  background-color: #2a2a2a;
+  border-color: #888888;
+}
+
+.toolbar-btn.secondary-btn {
+  background-color: #222222;
+  color: #ffffff;
+  border-color: #666666;
+  font-weight: 500;
+}
+
+.toolbar-btn.secondary-btn:hover {
+  background-color: #333333;
+  border-color: #aaaaaa;
+}
+
+.toolbar-btn.primary-btn {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  font-weight: 600;
+}
+
+.toolbar-btn.primary-btn:hover {
+  background-color: #e0e0e0;
+  border-color: #e0e0e0;
+}
+
+.print-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #cccccc;
+}
+
+.notice-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* A4シート表示コンテナ */
+.sheet-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 24px;
+  background-color: #121212;
+}
+
+/* A4用紙実寸比率シート (297mm x 210mm) */
+.a4-sheet {
+  --sheet-scale: 1;
+  position: relative;
+  width: 297mm;
+  height: 210mm;
+  background-color: #ffffff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  transform: scale(var(--sheet-scale, 1));
+  transform-origin: center center;
+  flex-shrink: 0;
+  /* 鍵盤線は一切描画しない完全な白紙領域 */
+}
+
+/* -------------------------------------------------------------
+ * ArUcoマーカースロット配置 (用紙端から10mmオフセット、27.5mm x 27.5mm)
+ * ------------------------------------------------------------- */
+/* -------------------------------------------------------------
+ * ArUcoマーカースロット配置 (用紙端から10mmオフセット、27.5mm x 27.5mm)
+ * ------------------------------------------------------------- */
+.marker-slot {
+  position: absolute;
+  width: 27.5mm;
+  height: 27.5mm;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ID 0 (左上): 端から10mm (X=10mm, Y=10mm) */
+.marker-tl {
+  top: 10mm;
+  left: 10mm;
+}
+
+/* ID 1 (右上): 端から10mm (X=259.5mm, Y=10mm) */
+.marker-tr {
+  top: 10mm;
+  right: 10mm;
+}
+
+/* ID 2 (右下): 端から10mm (X=259.5mm, Y=172.5mm) */
+.marker-br {
+  bottom: 10mm;
+  right: 10mm;
+}
+
+/* ID 3 (左下): 端から10mm (X=10mm, Y=172.5mm) */
+.marker-bl {
+  bottom: 10mm;
+  left: 10mm;
+}
+
+.aruco-marker {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* -------------------------------------------------------------
+ * CSS @media print 印刷レイアウト仕様
+ * ------------------------------------------------------------- */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0mm;
+  }
+
+  html, body {
+    width: 297mm !important;
+    height: 210mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #app {
+    background: transparent !important;
+    position: static !important;
+    width: 297mm !important;
+    height: 210mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* 演奏画面および操作UI・ツールバーを完全非表示 */
+  .camera-view,
+  .no-print,
+  .top-nav,
+  .print-toolbar {
+    display: none !important;
+  }
+
+  .print-view {
+    position: static !important;
+    width: 297mm !important;
+    height: 210mm !important;
+    background: #ffffff !important;
+    display: block !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .sheet-container {
+    width: 297mm !important;
+    height: 210mm !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    background: transparent !important;
+  }
+
+  /* 用紙物理左上 (0, 0) にピタリと密着固定 */
+  .a4-sheet {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 297mm !important;
+    height: 210mm !important;
+    transform: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* マーカーの位置を用紙各端から正確に 10mm オフセットで固定 */
+  .marker-slot {
+    position: absolute !important;
+    width: 27.5mm !important;
+    height: 27.5mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .marker-tl {
+    top: 10mm !important;
+    left: 10mm !important;
+    right: auto !important;
+    bottom: auto !important;
+  }
+
+  .marker-tr {
+    top: 10mm !important;
+    right: 10mm !important;
+    left: auto !important;
+    bottom: auto !important;
+  }
+
+  .marker-br {
+    bottom: 10mm !important;
+    right: 10mm !important;
+    top: auto !important;
+    left: auto !important;
+  }
+
+  .marker-bl {
+    bottom: 10mm !important;
+    left: 10mm !important;
+    top: auto !important;
+    right: auto !important;
+  }
+}
+
+/* -------------------------------------------------------------
+ * 音声有効化バナー (白黒ミニマル)
+ * ------------------------------------------------------------- */
+.audio-guide-banner {
+  position: absolute;
+  top: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  z-index: 15;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.audio-guide-banner.hidden {
+  opacity: 0;
+  transform: translate(-50%, -8px);
+  pointer-events: none;
+}
